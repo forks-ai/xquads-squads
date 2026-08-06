@@ -1,0 +1,93 @@
+name: xquads
+version: "1.0.0"
+short-title: "Xquads Chief"
+description: "Meta-orquestrador do Xquads. Porta de entrada única para os 14 squads: recebe a demanda em linguagem natural, diagnostica o domínio, monta o briefing de handoff e ATIVA o chefe do squad correto. Nunca executa o trabalho — apenas identifica e delega."
+author: "Synkra AIOS"
+license: MIT
+slashPrefix: "xquads"
+
+aios:
+  minVersion: "4.0.0"
+  type: squad
+
+tags:
+  - orchestration
+  - meta-orchestrator
+  - routing
+  - triage
+  - delegation
+  - entry-point
+  - multi-squad
+
+components:
+  agents:
+    # Tier -1 — Meta-Orquestrador (acima dos chefes de squad)
+    - xquads-chief.md
+  tasks:
+    - diagnose.md
+    - route.md
+    - review.md
+  workflows:
+    - wf-route-to-squad.yaml
+  checklists:
+    - output-quality.md
+  data:
+    - routing-catalog.yaml
+
+# Squads que este chefe pode ativar (targets de roteamento)
+routes_to:
+  internal:
+    - squad: advisory-board
+      chief: board-chair
+      command: "/advisory-board:agents:board-chair"
+    - squad: brand-squad
+      chief: brand-chief
+      command: "/brand-squad:agents:brand-chief"
+    - squad: c-level-squad
+      chief: vision-chief
+      command: "/c-level-squad:agents:vision-chief"
+    - squad: claude-code-mastery
+      chief: claude-mastery-chief
+      command: "/claude-code-mastery:agents:claude-mastery-chief"
+    - squad: copy-squad
+      chief: copy-chief
+      command: "/copy-squad:agents:copy-chief"
+    - squad: copy-master
+      chief: copy-master-chief
+      command: "/copy-master:agents:copy-master-chief"
+    - squad: cybersecurity
+      chief: cyber-chief
+      command: "/cybersecurity:agents:cyber-chief"
+    - squad: data-squad
+      chief: data-chief
+      command: "/data-squad:agents:data-chief"
+    - squad: design-squad
+      chief: design-chief
+      command: "/design-squad:agents:design-chief"
+    - squad: hormozi-squad
+      chief: hormozi-chief
+      command: "/hormozi-squad:agents:hormozi-chief"
+    - squad: marketing-squad
+      chief: marketing-chief
+      command: "/marketing-squad:agents:marketing-chief"
+    - squad: movement
+      chief: movement-chief
+      command: "/movement:agents:movement-chief"
+    - squad: storytelling
+      chief: story-chief
+      command: "/storytelling:agents:story-chief"
+    - squad: traffic-masters
+      chief: traffic-chief
+      command: "/traffic-masters:agents:traffic-chief"
+  external:
+    - squad: raxos
+      chief: raxos
+      command: "/raxos"
+      note: "Desenvolvimento de software. Fluxo SDC obrigatório — não é squad Xquads."
+    - squad: squad-architect
+      chief: squad
+      command: "/squad"
+      note: "Criação de squads/agentes novos. Só quando não existe squad para o domínio."
+
+config:
+  extends: extend

@@ -1,0 +1,269 @@
+# Routing Catalog: Xquads Chief (Meta-Orquestrador)
+# Mapeia demanda em linguagem natural -> squad -> chefe do squad
+# Referenciado por: tasks/diagnose.md e tasks/route.md
+#
+# Keywords em PT-BR primeiro (idioma do usuário), EN como fallback.
+
+meta:
+  version: "1.0.0"
+  total_squads: 14
+  # O comando de ativação corresponde ao nome da PASTA em ~/.claude/commands/.
+  # Se um squad não estiver instalado, a rota fica indisponível: avise o usuário
+  # e ofereça a alternativa mais próxima — nunca ative um comando inexistente.
+  # Quando houver command_alias, tente o command canônico primeiro.
+  confidence_thresholds:
+    high: 80    # roteia direto, sem perguntar
+    medium: 50  # roteia declarando a premissa assumida
+    low: 0      # faz UMA pergunta de desambiguação
+
+domains:
+
+  copywriting:
+    squad: copy-squad
+    chief: copy-chief
+    command: "/copy-squad:agents:copy-chief"
+    agents: 23
+    keywords: [copy, copywriting, headline, título, chamada, carta de vendas, sales letter,
+               vsl, script de vídeo, email, sequência de email, bullets, oferta escrita,
+               página de vendas, landing page, texto, escrever, persuasão, gatilho mental,
+               anúncio, criativo de texto, roteiro de vendas]
+    escalate_to: copy-master
+    escalate_when: "Projeto grande/complexo, mercado saturado, precisa de negociação, pitch ou SaaS copy"
+    description: "Escrever qualquer texto cujo objetivo é vender ou converter."
+
+  copywriting_advanced:
+    squad: copy-master
+    chief: copy-master-chief
+    command: "/copy-master:agents:copy-master-chief"
+    command_alias: "/Copy-Master:agents:copy-master-chief"  # instalações legadas com pasta capitalizada
+    agents: 33
+    keywords: [copy master, copy avançado, pitch deck, webinar, negociação, chris voss,
+               oren klaff, saas copy, mercado saturado, copy 2.0]
+    description: "Versão turbinada do Copy Squad — 33 mestres, inclui persuasão, pitch, negociação e SaaS."
+
+  paid_traffic:
+    squad: traffic-masters
+    chief: traffic-chief
+    command: "/traffic-masters:agents:traffic-chief"
+    agents: 16
+    keywords: [tráfego, tráfego pago, anúncio, ads, meta ads, facebook ads, instagram ads,
+               google ads, youtube ads, campanha de anúncio, cpa, cpl, roas, cac, escala,
+               escalar campanha, media buying, pixel, rastreamento, tracking, gerenciador,
+               conjunto de anúncios, verba, budget, otimizar campanha, criativo performou]
+    description: "Comprar mídia, escalar, otimizar e rastrear campanhas pagas."
+
+  branding:
+    squad: brand-squad
+    chief: brand-chief
+    command: "/brand-squad:agents:brand-chief"
+    agents: 15
+    keywords: [marca, branding, posicionamento, identidade, identidade visual, naming,
+               nome da marca, arquétipo, brand equity, arquitetura de marca, tagline,
+               slogan, storybrand, diferenciação, reposicionamento, rebrand, propósito da marca]
+    description: "Construir, posicionar ou reposicionar uma marca."
+
+  integrated_campaign:
+    squad: marketing-squad
+    chief: marketing-chief
+    command: "/marketing-squad:agents:marketing-chief"
+    agents: 5
+    keywords: [campanha, campanha completa, marketing, plano de marketing, mensagem,
+               ponta a ponta, mensagem + copy + criativo + tráfego, campanha integrada]
+    description: "Campanha de ponta a ponta (mensagem → copy → criativo → tráfego) com time enxuto."
+    prefer_when: "Usuário quer UMA campanha completa e não um deliverable isolado."
+
+  offers_and_business:
+    squad: hormozi-squad
+    chief: hormozi-chief
+    command: "/hormozi-squad:agents:hormozi-chief"
+    agents: 16
+    keywords: [oferta, grand slam offer, precificação, preço, pricing, ticket, lead,
+               geração de leads, core 4, closer, vendas, fechar venda, script de vendas,
+               escalar negócio, retenção, churn, ltv, modelo de negócio, monetização,
+               faturamento, mrr, workshop, garantia, bônus, value equation]
+    description: "Estrutura de oferta, preço, aquisição, vendas e escala do negócio."
+
+  storytelling:
+    squad: storytelling
+    chief: story-chief
+    command: "/storytelling:agents:story-chief"
+    agents: 12
+    keywords: [história, storytelling, narrativa, roteiro, jornada do herói, pitch,
+               apresentação, palestra, keynote, slides narrativos, manifesto, arco narrativo,
+               contar história, travado criativamente, estrutura de roteiro]
+    description: "Estruturar narrativa, pitch, apresentação ou manifesto."
+
+  design:
+    squad: design-squad
+    chief: design-chief
+    command: "/design-squad:agents:design-chief"
+    agents: 8
+    keywords: [design, ux, ui, interface, design system, componente, atomic design,
+               tokens, wireframe, protótipo, fluxo de usuário, usabilidade, acessibilidade,
+               handoff, figma, visual, layout, tipografia, identidade de produto]
+    description: "Design de interface, UX, design system e handoff para dev."
+
+  data_and_growth:
+    squad: data-squad
+    chief: data-chief
+    command: "/data-squad:agents:data-chief"
+    agents: 7
+    keywords: [dados, analytics, métricas, kpi, dashboard, growth, crescimento,
+               retenção, churn, clv, ltv, coorte, cohort, funil de dados, north star,
+               experimento, teste a/b, comunidade, engajamento, customer success, audiência]
+    description: "Medir, analisar e crescer com base em dados."
+
+  security:
+    squad: cybersecurity
+    chief: cyber-chief
+    command: "/cybersecurity:agents:cyber-chief"
+    agents: 15
+    keywords: [segurança, cibersegurança, pentest, invasão, vulnerabilidade, cve, owasp,
+               red team, blue team, appsec, incidente, vazamento, hardening, auditoria de segurança,
+               exposição de credencial, rls, exploit, recon, hackearam]
+    description: "Segurança ofensiva, defensiva, auditoria e resposta a incidente."
+
+  executive_strategy:
+    squad: c-level-squad
+    chief: vision-chief
+    command: "/c-level-squad:agents:vision-chief"
+    agents: 6
+    keywords: [estratégia, visão, c-level, ceo, cto, cmo, coo, cio, go-to-market, gtm,
+               captação, fundraise, investidor, board, operações, processo interno,
+               stack de tecnologia, roadmap estratégico, estrutura da empresa, plano anual]
+    description: "Decisões de nível executivo: visão, GTM, operações, tecnologia, captação."
+
+  strategic_counsel:
+    squad: advisory-board
+    chief: board-chair
+    command: "/advisory-board:agents:board-chair"
+    agents: 11
+    keywords: [conselho, conselheiro, decisão difícil, devo, vale a pena, dilema,
+               modelo mental, segunda opinião, sócio, cultura, propósito, o que fazer,
+               estou em dúvida, pivotar, desistir, escalar ou não, ray dalio, munger, naval]
+    description: "Conselho estratégico pessoal para decisões grandes e ambíguas."
+    prefer_when: "A pergunta é 'devo fazer X?' e não 'como faço X?'"
+
+  movement:
+    squad: movement
+    chief: movement-chief
+    command: "/movement:agents:movement-chief"
+    agents: 7
+    keywords: [movimento, comunidade, tribo, manifesto, identidade coletiva, causa,
+               pertencimento, ritual, impacto social, engajamento de comunidade, seguidores fiéis]
+    description: "Construir movimento, tribo e identidade coletiva em torno de uma causa."
+
+  claude_code_and_agents:
+    squad: claude-code-mastery
+    chief: claude-mastery-chief
+    command: "/claude-code-mastery:agents:claude-mastery-chief"
+    agents: 8
+    keywords: [claude code, claude.md, hook, hooks, mcp, skill, subagente, settings.json,
+               permissão, comando slash, configurar claude, aios, raxos config, contexto,
+               context rot, worktree, paralelização de agentes, automação do claude]
+    description: "Configurar, otimizar e automatizar o Claude Code / AIOS / RAXOS."
+
+# ---------------------------------------------------------------------------
+# Targets externos (não são squads Xquads, mas são destinos legítimos)
+# ---------------------------------------------------------------------------
+external_targets:
+
+  software_development:
+    target: raxos
+    command: "/raxos"
+    keywords: [código, implementar, bug, feature, refatorar, deploy, api, banco de dados,
+               migration, supabase, next.js, react, componente funcional, teste, erro,
+               não funciona, corrigir, criar tela, criar rota, integração técnica]
+    description: "Desenvolvimento de software. Entra no Story Development Cycle."
+    mandatory_flow: true
+    note: |
+      REGRA CRÍTICA: qualquer alteração de código passa pelo SDC completo
+      (@sage criar → @eden validar → @kai implementar → @vera QA → @holt push).
+      O Xquads Chief NUNCA escreve código. Roteia para /raxos e sai.
+      Exceções (não exigem story): typo <3 linhas, doc, config/.env.
+
+  squad_creation:
+    target: squad-architect
+    command: "/squad"
+    keywords: [criar squad, novo squad, clonar mente, novo agente, time de especialistas,
+               não existe squad para, quero um agente de]
+    description: "Criar um squad ou agente novo quando nenhum squad existente cobre o domínio."
+
+# ---------------------------------------------------------------------------
+# Desambiguação — casos que parecem de um squad mas são de outro
+# ---------------------------------------------------------------------------
+tie_breakers:
+
+  - situation: "Landing page não converte"
+    ask_or_infer: "O problema é o texto, o visual ou o tráfego que chega nela?"
+    default: copy-squad
+    alternatives: [design-squad, traffic-masters]
+    rule: "Texto/argumento → copy-squad. Layout/usabilidade → design-squad. Público errado → traffic-masters."
+
+  - situation: "Quero vender mais"
+    ask_or_infer: "Falta oferta, falta tráfego ou falta conversão?"
+    default: hormozi-squad
+    alternatives: [traffic-masters, copy-squad]
+    rule: "Sem oferta clara → hormozi. Oferta boa mas pouca gente vendo → traffic. Muita gente vendo e não compra → copy."
+
+  - situation: "Preciso de um nome/slogan"
+    default: brand-squad
+    alternatives: [copy-squad]
+    rule: "Nome de marca/produto → brand-squad. Headline de campanha → copy-squad."
+
+  - situation: "Preciso de uma apresentação"
+    default: storytelling
+    alternatives: [c-level-squad, design-squad]
+    rule: "Narrativa/pitch → storytelling. Board/investidor → c-level. Só o visual dos slides → design."
+
+  - situation: "Anúncio não performa"
+    default: traffic-masters
+    alternatives: [copy-squad]
+    rule: "Métrica/estrutura/pixel → traffic. Criativo e ângulo → copy (traffic devolve o briefing)."
+
+  - situation: "Quero criar uma comunidade"
+    default: movement
+    alternatives: [data-squad]
+    rule: "Identidade, causa e rituais → movement. Métricas e retenção da comunidade → data-squad."
+
+  - situation: "Devo fazer X ou Y?"
+    default: advisory-board
+    alternatives: [c-level-squad]
+    rule: "Decisão pessoal/existencial → advisory-board. Decisão operacional da empresa → c-level."
+
+  - situation: "Site/app com problema"
+    ask_or_infer: "É bug técnico, é experiência ou é segurança?"
+    default: raxos
+    alternatives: [design-squad, cybersecurity]
+    rule: "Quebrado/erro → raxos. Confuso/feio → design. Invadido/exposto → cybersecurity."
+
+# ---------------------------------------------------------------------------
+# Cadeias multi-squad — quando a demanda atravessa domínios
+# ---------------------------------------------------------------------------
+multi_squad_chains:
+
+  lancamento_completo:
+    trigger_keywords: [lançamento, lançar produto, lançar curso, launch completo]
+    sequence: [brand-squad, hormozi-squad, copy-squad, traffic-masters, data-squad]
+    handoff_notes: "Marca define a mensagem → Hormozi estrutura a oferta → Copy escreve → Traffic distribui → Data mede."
+    note: "Se o escopo for pequeno, prefira marketing-squad (já é integrado) em vez da cadeia inteira."
+
+  marca_nova:
+    trigger_keywords: [criar marca do zero, nova marca, começar do zero]
+    sequence: [brand-squad, storytelling, design-squad]
+    handoff_notes: "Posicionamento → narrativa → identidade visual."
+
+  produto_novo:
+    trigger_keywords: [novo produto, nova oferta, novo infoproduto]
+    sequence: [hormozi-squad, copy-squad, traffic-masters]
+    handoff_notes: "Oferta → copy de venda → aquisição."
+
+  produto_digital_do_zero:
+    trigger_keywords: [criar app, criar plataforma, criar saas]
+    sequence: [c-level-squad, design-squad, raxos]
+    handoff_notes: "Estratégia/GTM → UX e design system → desenvolvimento no SDC."
+
+  turnaround_de_metrica:
+    trigger_keywords: [caiu a conversão, piorou o resultado, métrica despencou]
+    sequence: [data-squad, traffic-masters, copy-squad]
+    handoff_notes: "Data isola onde caiu → Traffic corrige aquisição → Copy corrige conversão."

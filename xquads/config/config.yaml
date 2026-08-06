@@ -1,0 +1,61 @@
+# ═══════════════════════════════════════════════════════════════════
+# Squad: Xquads Chief
+# Domain: Meta-Orchestration & Routing
+# Version: 1.0.0
+# ═══════════════════════════════════════════════════════════════════
+
+squad:
+  name: xquads
+  display_name: "Xquads Chief"
+  version: "1.0.0"
+  domain: "Meta-orquestração — porta de entrada única dos 14 squads do Xquads"
+  description: |
+    Meta-orquestrador que fica um nível acima dos chefes de squad. Recebe a demanda
+    em linguagem natural, diagnostica o domínio, monta o briefing de handoff e ativa
+    o chefe do squad correto. Nunca executa o trabalho — identifica a atividade e
+    delega para quem executa.
+  keywords: [orquestração, roteamento, triagem, delegação, meta-orquestrador, porta de entrada, multi-squad]
+  entry_agent: xquads-chief
+  created_at: "2026-08-06"
+
+tiers:
+  tier_minus_1:
+    name: "Meta-Orchestration"
+    agents: [xquads-chief]
+    purpose: "Diagnosticar a demanda, montar briefing e ativar o chefe do squad correto"
+
+routing:
+  catalog: data/routing-catalog.yaml
+  total_squads: 14
+  external_targets: [raxos, squad-architect]
+  confidence_thresholds:
+    high: 80
+    medium: 50
+    low: 0
+  max_disambiguation_questions: 1
+  max_chain_links: 5
+  parallel_activation: false
+
+handoff:
+  max_briefing_tokens: 500
+  required_fields:
+    - demanda
+    - dominio
+    - objetivo_final
+    - contexto_conhecido
+    - premissas_assumidas
+    - fora_de_escopo
+    - task_sugerida
+    - proximo_squad
+
+behavior:
+  language: pt-BR
+  executes_work: false
+  selects_final_specialist: false
+  writes_code: false
+  announces_confidence: true
+
+quality_gate:
+  checklist: checklists/output-quality.md
+  scope: "roteamento (não avalia o deliverable do squad)"
+  auto_fail_on: "execução de trabalho pelo próprio chefe geral"

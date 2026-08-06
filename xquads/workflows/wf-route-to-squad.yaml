@@ -1,0 +1,145 @@
+workflow:
+  id: wf-route-to-squad
+  name: "Roteamento para Squad"
+  version: "1.0.0"
+  description: |
+    Workflow principal do Xquads Chief. Recebe uma demanda em linguagem natural,
+    diagnostica o domínio, monta o briefing de handoff e ATIVA o chefe do squad
+    correto, transferindo o comando da conversa. Suporta cadeia multi-squad,
+    ativando um elo por vez. O Xquads Chief nunca executa o trabalho — ele
+    identifica a atividade e entrega para quem executa.
+  trigger: "*route"
+  entry_agent: xquads-chief
+  estimated_duration: "1-3 minutes (até a ativação)"
+  type: sequential-with-handoff
+
+  sequence:
+    - agent: xquads-chief
+      action: diagnose
+      creates: diagnosis
+    - agent: xquads-chief
+      action: clarify
+      creates: disambiguation
+      condition: "diagnosis.confidence < 50"
+    - agent: xquads-chief
+      action: brief
+      creates: handoff_briefing
+    - agent: xquads-chief
+      action: activate
+      creates: squad_chief_activated
+    - agent: "{squad_chief}"
+      action: execute
+      creates: squad_deliverable
+    - agent: xquads-chief
+      action: review
+      creates: routing_verdict
+      condition: "squad_deliverable returned OR chain has next link"
+
+phases:
+  - id: phase_0
+    name: "Triagem"
+    agent: xquads-chief
+    task: diagnose.md
+    description: "Extrai a demanda real, classifica o domínio contra o routing-catalog, calcula confiança (0-100) e detecta se é single-squad ou cadeia multi-squad."
+    inputs:
+      - user_request: "natural language"
+      - routing_catalog: "data/routing-catalog.yaml"
+    outputs:
+      - domain: "string"
+      - target_squad: "squad-id"
+      - target_chief: "agent-id"
+      - confidence: "number"
+      - chain: "array | null"
+    checkpoint:
+      gate: "Domínio identificado com confiança >= 50, OU pergunta única emitida"
+      veto: "Squad inventado fora do catálogo — abortar e listar squads reais"
+
+  - id: phase_1
+    name: "Desambiguação"
+    agent: xquads-chief
+    task: diagnose.md
+    depends_on: [phase_0]
+    condition: "confidence < 50"
+    description: "Emite UMA pergunta de desambiguação tirada dos tie_breakers do catálogo, com as opções mapeadas para squads. Nunca mais de uma pergunta."
+    outputs:
+      - disambiguation_answer: "string"
+      - confidence: "number (recalculado)"
+    checkpoint:
+      gate: "Confiança pós-resposta >= 50"
+      veto: "Segunda pergunta emitida — assumir a opção mais provável e declarar a premissa"
+
+  - id: phase_2
+    name: "Briefing de Handoff"
+    agent: xquads-chief
+    task: route.md
+    depends_on: [phase_0, phase_1]
+    description: "Monta o pacote de handoff para o chefe do squad: demanda, objetivo final, contexto conhecido, premissas assumidas, fora de escopo, task sugerida e próximo elo da cadeia. Máximo 500 tokens."
+    outputs:
+      - handoff_briefing: "markdown (<= 500 tokens)"
+    checkpoint:
+      gate: "Briefing completo, dentro de 500 tokens, com fatos e premissas [ASSUMIDO] separados"
+      veto: "Contexto inventado apresentado como fato, ou especialista final pré-escolhido (decisão do chefe do squad)"
+
+  - id: phase_3
+    name: "Ativação do Chefe do Squad"
+    agent: xquads-chief
+    task: route.md
+    depends_on: [phase_2]
+    description: "Imprime o bloco de diagnóstico e ATIVA o chefe do squad pelo comando do catálogo (modo em sessão) ou por spawn de subagente (modo autônomo), entregando o briefing. O Xquads Chief transfere o comando e sai de cena."
+    outputs:
+      - activation_command: "string"
+      - squad_chief_activated: "boolean"
+    checkpoint:
+      gate: "Chefe do squad efetivamente ativado e conduzindo a conversa"
+      veto: "Apenas recomendou o squad sem ativar, OU ativou dois chefes em paralelo"
+
+  - id: phase_4
+    name: "Execução pelo Squad"
+    agent: "{squad_chief}"
+    task: "{squad_task}"
+    depends_on: [phase_3]
+    description: "O chefe do squad assume: roda o próprio diagnose, escolhe o especialista, executa e aplica o próprio quality gate. O Xquads Chief NÃO interfere nesta fase."
+    outputs:
+      - squad_deliverable: "conforme o squad"
+    checkpoint:
+      gate: "Squad entregou dentro do escopo do briefing"
+      veto: "Xquads Chief opinando por cima do chefe do squad"
+
+  - id: phase_5
+    name: "Veredito de Roteamento"
+    agent: xquads-chief
+    task: review.md
+    depends_on: [phase_4]
+    condition: "deliverable returned OR chain.next exists"
+    description: "Valida se o roteamento acertou e se a demanda original foi respondida. NÃO avalia qualidade técnica do deliverable — isso é do chefe do squad. Encerra ou ativa o próximo elo da cadeia."
+    outputs:
+      - routing_verdict: "ACERTO | PARCIAL | ERRO DE ROTA | FORA DE ESCOPO"
+      - next_action: "encerrar | devolver | re-rotear | encadear"
+    checkpoint:
+      gate: "Veredito emitido e próximo passo definido"
+      veto: "Re-roteou em silêncio sem registrar o aprendizado"
+
+# Cadeia multi-squad: repete phases 2-5 por elo, sequencialmente
+chain_protocol:
+  rule: "Um elo por vez. O output do elo N vira 'Contexto conhecido' do briefing do elo N+1."
+  parallel: false
+  announce_upfront: true
+  interruptible: true
+  max_links: 5
+
+special_routes:
+  code:
+    condition: "demanda envolve escrever ou alterar código"
+    target: "/raxos"
+    note: "Story Development Cycle obrigatório. O Xquads Chief não implementa nada."
+  no_squad_match:
+    condition: "nenhum domínio do catálogo cobre a demanda"
+    target: "/squad"
+    note: "Oferecer criação de squad novo — não forçar um squad inadequado."
+
+completion_criteria:
+  - "Demanda diagnosticada com confiança declarada e motivo explícito"
+  - "Briefing estruturado entregue ao chefe do squad"
+  - "Chefe do squad ativado e no comando da conversa"
+  - "Xquads Chief não executou nenhuma parte do trabalho"
+  - "Cadeia multi-squad, quando houver, executada um elo por vez"
