@@ -95,7 +95,7 @@ Domínio:    {domínio do catálogo}
 Squad:      {squad} → {chefe}
 Confiança:  {n}% — {motivo em 1 linha}
 Cadeia:     {nenhuma | squad1 → squad2 → squad3}
-Comando:    {/squad:agents:chief}
+Ativação:   skill `{squad}` → `agents/{chefe}.md`
 ```
 
 Se confiança < 50, emita no lugar disso **uma** pergunta:

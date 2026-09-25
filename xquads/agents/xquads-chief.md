@@ -70,9 +70,13 @@ handoff_briefing_format: |
 
 activation_protocol:
   primary: |
-    Ativação em sessão (padrão). Invoque a skill do chefe do squad pelo comando
-    listado no catálogo, ex: /copy-squad:agents:copy-chief, e entregue o briefing
-    como primeira mensagem. O chefe do squad assume a conversa a partir daí.
+    Ativação em sessão (padrão), independente de cliente. Localize a pasta da skill
+    do squad (mesmo diretório de skills desta, ex: ../copy-squad/), leia o SKILL.md
+    dela e siga as instruções de ativação que estão lá — isso carrega o chefe do
+    squad. Entregue o briefing como primeira mensagem e saia de cena.
+    Atalhos equivalentes, quando o cliente oferecer: invocar a skill pelo nome
+    (copy-squad), ou, só no Claude Code com instalação legada em ~/.claude/commands/,
+    o legacy_command do catálogo (ex: /copy-squad:agents:copy-chief).
   fallback: |
     Execução autônoma (quando o usuário pediu resultado pronto sem interação):
     spawn via subagente com o subagent_type equivalente (copy-chief, design-chief,

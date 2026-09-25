@@ -7,10 +7,16 @@
 meta:
   version: "1.0.0"
   total_squads: 14
-  # O comando de ativação corresponde ao nome da PASTA em ~/.claude/commands/.
-  # Se um squad não estiver instalado, a rota fica indisponível: avise o usuário
-  # e ofereça a alternativa mais próxima — nunca ative um comando inexistente.
-  # Quando houver command_alias, tente o command canônico primeiro.
+  # ATIVAÇÃO — independente de cliente.
+  #   `squad`  é também o nome da skill e o nome da pasta. Ative lendo o SKILL.md
+  #            dela e seguindo as instruções de ativação que estão lá. Funciona em
+  #            Claude Code, Codex, Gemini CLI, Cursor, Copilot, OpenCode e afins.
+  #   `legacy_command` é o atalho antigo, válido só em instalações do Claude Code
+  #            feitas em ~/.claude/commands/. Use apenas se o cliente for o Claude
+  #            Code E o squad estiver instalado por esse caminho.
+  # Se o squad não estiver instalado, a rota fica indisponível: avise o usuário,
+  # indique `install.sh <squad>` e ofereça a alternativa mais próxima entre as
+  # instaladas — nunca finja ter ativado um squad ausente.
   confidence_thresholds:
     high: 80    # roteia direto, sem perguntar
     medium: 50  # roteia declarando a premissa assumida
@@ -21,7 +27,7 @@ domains:
   copywriting:
     squad: copy-squad
     chief: copy-chief
-    command: "/copy-squad:agents:copy-chief"
+    legacy_command: "/copy-squad:agents:copy-chief"
     agents: 23
     keywords: [copy, copywriting, headline, título, chamada, carta de vendas, sales letter,
                vsl, script de vídeo, email, sequência de email, bullets, oferta escrita,
@@ -34,8 +40,8 @@ domains:
   copywriting_advanced:
     squad: copy-master
     chief: copy-master-chief
-    command: "/copy-master:agents:copy-master-chief"
-    command_alias: "/Copy-Master:agents:copy-master-chief"  # instalações legadas com pasta capitalizada
+    legacy_command: "/copy-master:agents:copy-master-chief"
+    legacy_command_alias: "/Copy-Master:agents:copy-master-chief"  # instalações legadas com pasta capitalizada
     agents: 33
     keywords: [copy master, copy avançado, pitch deck, webinar, negociação, chris voss,
                oren klaff, saas copy, mercado saturado, copy 2.0]
@@ -44,7 +50,7 @@ domains:
   paid_traffic:
     squad: traffic-masters
     chief: traffic-chief
-    command: "/traffic-masters:agents:traffic-chief"
+    legacy_command: "/traffic-masters:agents:traffic-chief"
     agents: 16
     keywords: [tráfego, tráfego pago, anúncio, ads, meta ads, facebook ads, instagram ads,
                google ads, youtube ads, campanha de anúncio, cpa, cpl, roas, cac, escala,
@@ -55,7 +61,7 @@ domains:
   branding:
     squad: brand-squad
     chief: brand-chief
-    command: "/brand-squad:agents:brand-chief"
+    legacy_command: "/brand-squad:agents:brand-chief"
     agents: 15
     keywords: [marca, branding, posicionamento, identidade, identidade visual, naming,
                nome da marca, arquétipo, brand equity, arquitetura de marca, tagline,
@@ -65,7 +71,7 @@ domains:
   integrated_campaign:
     squad: marketing-squad
     chief: marketing-chief
-    command: "/marketing-squad:agents:marketing-chief"
+    legacy_command: "/marketing-squad:agents:marketing-chief"
     agents: 5
     keywords: [campanha, campanha completa, marketing, plano de marketing, mensagem,
                ponta a ponta, mensagem + copy + criativo + tráfego, campanha integrada]
@@ -75,7 +81,7 @@ domains:
   offers_and_business:
     squad: hormozi-squad
     chief: hormozi-chief
-    command: "/hormozi-squad:agents:hormozi-chief"
+    legacy_command: "/hormozi-squad:agents:hormozi-chief"
     agents: 16
     keywords: [oferta, grand slam offer, precificação, preço, pricing, ticket, lead,
                geração de leads, core 4, closer, vendas, fechar venda, script de vendas,
@@ -86,7 +92,7 @@ domains:
   storytelling:
     squad: storytelling
     chief: story-chief
-    command: "/storytelling:agents:story-chief"
+    legacy_command: "/storytelling:agents:story-chief"
     agents: 12
     keywords: [história, storytelling, narrativa, roteiro, jornada do herói, pitch,
                apresentação, palestra, keynote, slides narrativos, manifesto, arco narrativo,
@@ -96,7 +102,7 @@ domains:
   design:
     squad: design-squad
     chief: design-chief
-    command: "/design-squad:agents:design-chief"
+    legacy_command: "/design-squad:agents:design-chief"
     agents: 8
     keywords: [design, ux, ui, interface, design system, componente, atomic design,
                tokens, wireframe, protótipo, fluxo de usuário, usabilidade, acessibilidade,
@@ -106,7 +112,7 @@ domains:
   data_and_growth:
     squad: data-squad
     chief: data-chief
-    command: "/data-squad:agents:data-chief"
+    legacy_command: "/data-squad:agents:data-chief"
     agents: 7
     keywords: [dados, analytics, métricas, kpi, dashboard, growth, crescimento,
                retenção, churn, clv, ltv, coorte, cohort, funil de dados, north star,
@@ -116,7 +122,7 @@ domains:
   security:
     squad: cybersecurity
     chief: cyber-chief
-    command: "/cybersecurity:agents:cyber-chief"
+    legacy_command: "/cybersecurity:agents:cyber-chief"
     agents: 15
     keywords: [segurança, cibersegurança, pentest, invasão, vulnerabilidade, cve, owasp,
                red team, blue team, appsec, incidente, vazamento, hardening, auditoria de segurança,
@@ -126,7 +132,7 @@ domains:
   executive_strategy:
     squad: c-level-squad
     chief: vision-chief
-    command: "/c-level-squad:agents:vision-chief"
+    legacy_command: "/c-level-squad:agents:vision-chief"
     agents: 6
     keywords: [estratégia, visão, c-level, ceo, cto, cmo, coo, cio, go-to-market, gtm,
                captação, fundraise, investidor, board, operações, processo interno,
@@ -136,7 +142,7 @@ domains:
   strategic_counsel:
     squad: advisory-board
     chief: board-chair
-    command: "/advisory-board:agents:board-chair"
+    legacy_command: "/advisory-board:agents:board-chair"
     agents: 11
     keywords: [conselho, conselheiro, decisão difícil, devo, vale a pena, dilema,
                modelo mental, segunda opinião, sócio, cultura, propósito, o que fazer,
@@ -147,7 +153,7 @@ domains:
   movement:
     squad: movement
     chief: movement-chief
-    command: "/movement:agents:movement-chief"
+    legacy_command: "/movement:agents:movement-chief"
     agents: 7
     keywords: [movimento, comunidade, tribo, manifesto, identidade coletiva, causa,
                pertencimento, ritual, impacto social, engajamento de comunidade, seguidores fiéis]
@@ -156,7 +162,7 @@ domains:
   claude_code_and_agents:
     squad: claude-code-mastery
     chief: claude-mastery-chief
-    command: "/claude-code-mastery:agents:claude-mastery-chief"
+    legacy_command: "/claude-code-mastery:agents:claude-mastery-chief"
     agents: 8
     keywords: [claude code, claude.md, hook, hooks, mcp, skill, subagente, settings.json,
                permissão, comando slash, configurar claude, aios, raxos config, contexto,

@@ -64,28 +64,40 @@ Ativando {chefe}...
 
 ### Mecanismo de ativação
 
-**Modo em sessão (padrão)** — o usuário vai conversar com o chefe do squad:
+**Modo em sessão (padrão)** — o usuário vai conversar com o chefe do squad.
 
-Invoque a skill do chefe pelo comando do catálogo e entregue o briefing como primeira mensagem:
+Ative a skill do squad e entregue o briefing como primeira mensagem. O procedimento
+abaixo funciona em qualquer cliente compatível com Agent Skills (Claude Code, Codex,
+Gemini CLI, Cursor, Copilot, OpenCode, Goose, Amp e afins):
 
-| Squad | Comando de ativação |
-|---|---|
-| copy-squad | `/copy-squad:agents:copy-chief` |
-| copy-master | `/copy-master:agents:copy-master-chief` |
-| traffic-masters | `/traffic-masters:agents:traffic-chief` |
-| brand-squad | `/brand-squad:agents:brand-chief` |
-| marketing-squad | `/marketing-squad:agents:marketing-chief` |
-| hormozi-squad | `/hormozi-squad:agents:hormozi-chief` |
-| storytelling | `/storytelling:agents:story-chief` |
-| design-squad | `/design-squad:agents:design-chief` |
-| data-squad | `/data-squad:agents:data-chief` |
-| cybersecurity | `/cybersecurity:agents:cyber-chief` |
-| c-level-squad | `/c-level-squad:agents:vision-chief` |
-| advisory-board | `/advisory-board:agents:board-chair` |
-| movement | `/movement:agents:movement-chief` |
-| claude-code-mastery | `/claude-code-mastery:agents:claude-mastery-chief` |
-| **raxos (código)** | `/raxos` |
-| **squad novo** | `/squad` |
+1. Localize a pasta da skill do squad — fica ao lado desta, no mesmo diretório de
+   skills (`../{squad}/`).
+2. Leia o `SKILL.md` dela e siga as instruções de ativação que estão lá.
+3. Entregue o briefing e saia de cena.
+
+| Squad | Skill | Chefe carregado |
+|---|---|---|
+| copy-squad | `copy-squad` | `agents/copy-chief.md` |
+| copy-master | `copy-master` | `agents/copy-master-chief.md` |
+| traffic-masters | `traffic-masters` | `agents/traffic-chief.md` |
+| brand-squad | `brand-squad` | `agents/brand-chief.md` |
+| marketing-squad | `marketing-squad` | `agents/marketing-chief.md` |
+| hormozi-squad | `hormozi-squad` | `agents/hormozi-chief.md` |
+| storytelling | `storytelling` | `agents/story-chief.md` |
+| design-squad | `design-squad` | `agents/design-chief.md` |
+| data-squad | `data-squad` | `agents/data-chief.md` |
+| cybersecurity | `cybersecurity` | `agents/cyber-chief.md` |
+| c-level-squad | `c-level-squad` | `agents/vision-chief.md` |
+| advisory-board | `advisory-board` | `agents/board-chair.md` |
+| movement | `movement` | `agents/movement-chief.md` |
+| claude-code-mastery | `claude-code-mastery` | `agents/claude-mastery-chief.md` |
+
+**Atalhos equivalentes**, quando o cliente oferecer: invocar a skill pelo nome, ou —
+só no Claude Code com instalação legada em `~/.claude/commands/` — o `legacy_command`
+do catálogo (ex: `/copy-squad:agents:copy-chief`).
+
+**Fora do Xquads:** código e desenvolvimento vão para o fluxo de desenvolvimento do
+usuário (no RAXOS, `/raxos` com Story Development Cycle). Domínio sem squad: `/squad`.
 
 **Modo autônomo** — quando o usuário pediu o resultado pronto, sem querer conversar:
 

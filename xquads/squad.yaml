@@ -35,50 +35,53 @@ components:
     - routing-catalog.yaml
 
 # Squads que este chefe pode ativar (targets de roteamento)
+# O nome do squad é também o nome da skill: ative lendo o SKILL.md dele.
+# `legacy_command` só vale em instalações do Claude Code via ~/.claude/commands/.
+# Em `external`, `command` é a invocação real do sistema externo — não é legado.
 routes_to:
   internal:
     - squad: advisory-board
       chief: board-chair
-      command: "/advisory-board:agents:board-chair"
+      legacy_command: "/advisory-board:agents:board-chair"
     - squad: brand-squad
       chief: brand-chief
-      command: "/brand-squad:agents:brand-chief"
+      legacy_command: "/brand-squad:agents:brand-chief"
     - squad: c-level-squad
       chief: vision-chief
-      command: "/c-level-squad:agents:vision-chief"
+      legacy_command: "/c-level-squad:agents:vision-chief"
     - squad: claude-code-mastery
       chief: claude-mastery-chief
-      command: "/claude-code-mastery:agents:claude-mastery-chief"
+      legacy_command: "/claude-code-mastery:agents:claude-mastery-chief"
     - squad: copy-squad
       chief: copy-chief
-      command: "/copy-squad:agents:copy-chief"
+      legacy_command: "/copy-squad:agents:copy-chief"
     - squad: copy-master
       chief: copy-master-chief
-      command: "/copy-master:agents:copy-master-chief"
+      legacy_command: "/copy-master:agents:copy-master-chief"
     - squad: cybersecurity
       chief: cyber-chief
-      command: "/cybersecurity:agents:cyber-chief"
+      legacy_command: "/cybersecurity:agents:cyber-chief"
     - squad: data-squad
       chief: data-chief
-      command: "/data-squad:agents:data-chief"
+      legacy_command: "/data-squad:agents:data-chief"
     - squad: design-squad
       chief: design-chief
-      command: "/design-squad:agents:design-chief"
+      legacy_command: "/design-squad:agents:design-chief"
     - squad: hormozi-squad
       chief: hormozi-chief
-      command: "/hormozi-squad:agents:hormozi-chief"
+      legacy_command: "/hormozi-squad:agents:hormozi-chief"
     - squad: marketing-squad
       chief: marketing-chief
-      command: "/marketing-squad:agents:marketing-chief"
+      legacy_command: "/marketing-squad:agents:marketing-chief"
     - squad: movement
       chief: movement-chief
-      command: "/movement:agents:movement-chief"
+      legacy_command: "/movement:agents:movement-chief"
     - squad: storytelling
       chief: story-chief
-      command: "/storytelling:agents:story-chief"
+      legacy_command: "/storytelling:agents:story-chief"
     - squad: traffic-masters
       chief: traffic-chief
-      command: "/traffic-masters:agents:traffic-chief"
+      legacy_command: "/traffic-masters:agents:traffic-chief"
   external:
     - squad: raxos
       chief: raxos

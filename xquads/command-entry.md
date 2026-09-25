@@ -5,6 +5,12 @@ description: CHEFE GERAL do Xquads. Porta de entrada única — identifica a ati
 
 # 🎯 xquads — Chefe Geral do Xquads
 
+> **Este arquivo é o formato legado de slash command do Claude Code.** O Xquads agora é
+> distribuído como Agent Skill, o que o faz funcionar também em Codex, Gemini CLI, Cursor,
+> Copilot e outros clientes. A definição canônica de ativação está em
+> [`SKILL.md`](SKILL.md). Este arquivo segue funcionando para quem instalou por
+> `~/.claude/commands/` — nada quebrou.
+
 Ative o agente **Xquads Chief (Xander)**, meta-orquestrador dos 14 squads do Xquads.
 
 ## Ativação
