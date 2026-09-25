@@ -1,0 +1,13 @@
+# Artefatos de build que não pertencem a um repositório de skills
+.next/
+node_modules/
+dist/
+build/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
