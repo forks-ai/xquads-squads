@@ -1,0 +1,39 @@
+# Routing Catalog — Marketing Squad
+# Referenciado por tasks/diagnose.md. Mapeia a demanda ao especialista certo.
+
+domains:
+  message_positioning:
+    keywords: [mensagem, posicionamento, storybrand, one-liner, proposta de valor, oferta confusa, funil, nurture]
+    primary_agent: donald-miller
+    secondary_agent: eugene-schwartz
+    description: "Definir o que a marca diz e para quem — a espinha da campanha."
+
+  copywriting:
+    keywords: [copy, headline, título, carta de vendas, sales page, vsl, e-mail, bullets, mecanismo, anúncio, consciência]
+    primary_agent: eugene-schwartz
+    secondary_agent: donald-miller
+    description: "As palavras que vendem, calibradas ao nível de consciência do mercado."
+
+  visual_creative:
+    keywords: [criativo, visual, imagem, thumbnail, banner, identidade, logo, ilustração, prompt, midjourney, social]
+    primary_agent: visual-generator
+    secondary_agent: eugene-schwartz
+    description: "Os assets visuais — criativos de anúncio, identidade, prompts de IA."
+
+  paid_traffic:
+    keywords: [tráfego, meta ads, facebook, instagram, anúncio pago, público, orçamento, cbo, abo, escala, gestor, lançamento]
+    primary_agent: pedro-sobral
+    secondary_agent: visual-generator
+    description: "Distribuição e escala via tráfego pago — foco Meta Ads, PT-BR."
+
+  full_campaign:
+    keywords: [campanha, campanha completa, marketing completo, do zero, ponta a ponta]
+    primary_agent: marketing-chief
+    secondary_agent: null
+    description: "Campanha ponta a ponta — dispara o workflow *campaign (as 4 disciplinas em sequência)."
+
+  launch:
+    keywords: [lançamento, lançar, abertura de carrinho, semana de lançamento, ondas]
+    primary_agent: marketing-chief
+    secondary_agent: pedro-sobral
+    description: "Lançamento de produto/oferta — dispara o workflow *launch (campanha em ondas)."

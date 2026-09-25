@@ -1,0 +1,60 @@
+name: marketing-squad
+version: "1.0.0"
+short-title: "Marketing Squad"
+description: "Squad de marketing de elite — reúne O MELHOR agente de cada disciplina: Mensagem (Donald Miller/StoryBrand), Copy (Eugene Schwartz), Criativo Visual (Visual Generator) e Tráfego Pago (Pedro Sobral), sob um orquestrador (Marketing Chief). Cobre campanha completa de ponta a ponta: mensagem → copy → criativo → distribuição."
+author: "Xquads"
+license: MIT
+slashPrefix: "marketing-squad"
+
+aios:
+  minVersion: "4.0.0"
+  type: squad
+
+tags:
+  - marketing
+  - branding
+  - storybrand
+  - copywriting
+  - creative
+  - visual
+  - paid-traffic
+  - meta-ads
+  - campaign
+  - launch
+  - funnel
+
+components:
+  agents:
+    # Tier 0 — Orchestrator
+    - marketing-chief.md
+    # Tier 1 — Best-of-breed specialists (um por disciplina)
+    - donald-miller.md      # Brand / Message  (StoryBrand)
+    - eugene-schwartz.md    # Copy             (5 Awareness Levels)
+    - visual-generator.md   # Creative / Visual
+    - pedro-sobral.md       # Paid Traffic     (Meta Ads, PT-BR)
+  tasks:
+    - diagnose.md
+    - build-message.md
+    - write-copy.md
+    - create-creatives.md
+    - build-traffic.md
+    - review.md
+  workflows:
+    - wf-full-campaign.yaml
+    - wf-launch.yaml
+  checklists:
+    - output-quality.md
+
+config:
+  extends: extend
+
+# ═══════════════════════════════════════════════════════════════════
+# tier_architecture:
+#   tier_0 (Orchestration): marketing-chief — diagnostica, roteia, revisa
+#   tier_1 (Specialists):
+#     brand   → donald-miller     (mensagem/posicionamento)
+#     copy    → eugene-schwartz   (copy/consciência)
+#     visual  → visual-generator  (criativo/assets)
+#     traffic → pedro-sobral      (tráfego/lançamento)
+# assembly_line: message → copy → creative → traffic
+# ═══════════════════════════════════════════════════════════════════

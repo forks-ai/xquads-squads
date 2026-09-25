@@ -1,0 +1,118 @@
+workflow:
+  id: wf-launch
+  name: "Lançamento de Produto/Oferta"
+  version: "1.0.0"
+  description: |
+    Workflow de lançamento — variação da campanha completa otimizada para
+    lançar um produto ou oferta com data. Difere da campanha padrão por rodar em
+    ondas (pré-lançamento → aquecimento → abertura → escassez) e por Pedro Sobral
+    montar a estratégia de lançamento (não só tráfego perene). Mira orquestra as
+    quatro disciplinas em torno do calendário do lançamento.
+  trigger: "*launch"
+  entry_agent: marketing-chief
+  estimated_duration: "90-150 minutes"
+  type: sequential
+  sequence:
+    - agent: marketing-chief
+      action: diagnose
+      creates: launch_brief
+    - agent: donald-miller
+      action: build-message
+      creates: launch_narrative
+    - agent: eugene-schwartz
+      action: write-copy
+      creates: launch_copy
+    - agent: visual-generator
+      action: create-creatives
+      creates: launch_creatives
+    - agent: pedro-sobral
+      action: build-traffic
+      creates: launch_plan
+    - agent: marketing-chief
+      action: review
+      creates: final_launch
+
+phases:
+  - id: phase_0
+    name: "Diagnóstico do Lançamento"
+    agent: marketing-chief
+    task: diagnose.md
+    description: "Mira define o produto, a oferta, a data de abertura, o público, o nível de consciência e a meta (faturamento/leads). Mapeia as ondas do lançamento."
+    outputs:
+      - launch_brief: "markdown"
+      - launch_calendar: "markdown"
+    checkpoint:
+      gate: "Oferta, data, meta e ondas do lançamento definidas"
+      veto: "Sem data ou oferta definida — não há lançamento sem oferta e prazo"
+
+  - id: phase_1
+    name: "Narrativa do Lançamento"
+    agent: donald-miller
+    task: build-message.md
+    depends_on: [phase_0]
+    description: "Donald Miller cria a narrativa StoryBrand do lançamento: o one-liner, a transformação prometida e o esqueleto do funil de lançamento (iscas, nurture, sequência de vendas)."
+    outputs:
+      - launch_narrative: "markdown"
+      - one_liner: "string"
+    checkpoint:
+      gate: "Narrativa clara com transformação e oferta que passa no grunt test"
+      veto: "Promessa vaga — a transformação precisa ser específica e desejável"
+
+  - id: phase_2
+    name: "Copy do Lançamento"
+    agent: eugene-schwartz
+    task: write-copy.md
+    depends_on: [phase_1]
+    description: "Eugene Schwartz escreve a copy de cada onda: pré-lançamento (curiosidade), aquecimento (mecanismo/prova), abertura (oferta) e escassez (urgência) — cada peça calibrada ao nível de consciência daquele momento do lançamento."
+    outputs:
+      - launch_copy: "markdown"
+      - big_idea: "string"
+    checkpoint:
+      gate: "Cada onda com copy calibrada à consciência; oferta e urgência claras na abertura"
+      veto: "Copy de abertura sem oferta irresistível ou sem escassez real"
+
+  - id: phase_3
+    name: "Criativos do Lançamento"
+    agent: visual-generator
+    task: create-creatives.md
+    depends_on: [phase_2]
+    description: "O Visual Generator cria os criativos de cada onda (anúncios, thumbnails de aulas/lives, banners, prompts de IA), consistentes com a narrativa e otimizados por plataforma."
+    outputs:
+      - launch_creatives: "markdown"
+      - image_prompts: "list"
+    checkpoint:
+      gate: "Criativos consistentes com a narrativa e servindo a Big Idea de cada onda"
+      veto: "Criativos inconsistentes entre as ondas do lançamento"
+
+  - id: phase_4
+    name: "Plano de Tráfego do Lançamento"
+    agent: pedro-sobral
+    task: build-traffic.md
+    depends_on: [phase_3]
+    description: "Pedro Sobral monta a estratégia de lançamento: campanhas por onda, públicos por temperatura (frio → captação; morno/quente → conversão), orçamento por fase, retargeting da lista de lançamento e escala na abertura."
+    outputs:
+      - launch_plan: "markdown"
+      - budget_by_wave: "markdown"
+    checkpoint:
+      gate: "Plano por onda com públicos por temperatura e orçamento por fase"
+      veto: "Sem retargeting da audiência de lançamento ou sem plano de escala na abertura"
+
+  - id: phase_5
+    name: "Revisão Final do Lançamento"
+    agent: marketing-chief
+    task: review.md
+    depends_on: [phase_4]
+    description: "Mira valida a coerência do lançamento inteiro contra os critérios de qualidade e o calendário — a narrativa, a copy, os criativos e o tráfego contando uma história consistente ao longo das ondas."
+    outputs:
+      - final_launch: "markdown"
+      - quality_verdict: "PASS | REVISE"
+    checkpoint:
+      gate: "Coerência entre disciplinas e ondas; meta e métrica primária claras"
+      veto: "Incoerência entre ondas ou disciplinas — retorna à fase responsável"
+
+completion_criteria:
+  - "Narrativa e one-liner do lançamento definidos"
+  - "Copy calibrada por onda (pré → aquecimento → abertura → escassez)"
+  - "Criativos consistentes por onda"
+  - "Plano de tráfego por onda com temperatura e orçamento"
+  - "Coerência validada ao longo do calendário do lançamento"

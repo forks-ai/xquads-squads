@@ -1,0 +1,60 @@
+# ═══════════════════════════════════════════════════════════════════
+# Squad: Marketing Squad
+# Domain: Marketing de ponta a ponta (mensagem, copy, criativo, tráfego)
+# Version: 1.0.0
+# ═══════════════════════════════════════════════════════════════════
+
+squad:
+  name: marketing-squad
+  display_name: "Marketing Squad"
+  version: "1.0.0"
+  domain: "Marketing de elite — o melhor agente de cada disciplina, orquestrado numa linha de montagem: mensagem → copy → criativo → distribuição"
+  description: |
+    Squad de 5 agentes: 1 orquestrador (Marketing Chief) + os 4 melhores
+    especialistas de cada squad-fonte do Xquads (brand, copy, design, traffic).
+  keywords: [marketing, branding, storybrand, copywriting, criativo, visual, tráfego pago, meta ads, campanha, lançamento, funil]
+  entry_agent: marketing-chief
+  created_at: "2026-07-08"
+
+tiers:
+  tier_0:
+    name: "Orchestration"
+    agents: [marketing-chief]
+    purpose: "Diagnostica a demanda, roteia para a disciplina certa, sequencia a campanha e revisa a qualidade entre handoffs"
+  tier_1_experts:
+    name: "Best-of-breed Specialists"
+    agents: [donald-miller, eugene-schwartz, visual-generator, pedro-sobral]
+    purpose: "O melhor agente de cada disciplina de marketing"
+
+agents:
+  marketing-chief:  { file: marketing-chief.md,  tier: 0, icon: "🎯", focus: "Orquestração, roteamento, sequenciamento de campanha, QA" }
+  donald-miller:    { file: donald-miller.md,     tier: 1, icon: "📖", focus: "Mensagem/posicionamento — StoryBrand SB7, one-liner, funil" }
+  eugene-schwartz:  { file: eugene-schwartz.md,   tier: 1, icon: "🧠", focus: "Copy — 5 níveis de consciência, headline, mecanismo, VSL" }
+  visual-generator: { file: visual-generator.md,  tier: 1, icon: "🎨", focus: "Criativo/visual — prompts de IA, anúncios, identidade, assets" }
+  pedro-sobral:     { file: pedro-sobral.md,      tier: 1, icon: "🚦", focus: "Tráfego pago — Meta Ads, públicos, orçamento, lançamento (PT-BR)" }
+
+# Roteamento e handoffs (a linha de montagem)
+handoffs:
+  donald-miller:
+    routes_to: [eugene-schwartz]
+    escalates_to: [marketing-chief]
+  eugene-schwartz:
+    routes_to: [visual-generator]
+    escalates_to: [marketing-chief]
+  visual-generator:
+    routes_to: [pedro-sobral]
+    escalates_to: [marketing-chief]
+  pedro-sobral:
+    routes_to: [marketing-chief]
+    escalates_to: [marketing-chief]
+
+cross_cutting:
+  quality_standards:
+    min_score: 7.0
+    reviewer: marketing-chief
+  assembly_line: [donald-miller, eugene-schwartz, visual-generator, pedro-sobral]
+
+settings:
+  activation:
+    prefix: "@marketing-squad"
+    example: "@marketing-squad:marketing-chief"
