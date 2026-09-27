@@ -26,20 +26,38 @@ REPO="https://github.com/ohmyjahh/xquads-squads.git"
 # atualiza todo mundo.
 HUB="$HOME/.agents/skills"
 
-# Destinos por cliente. Cada linha: "rótulo|marcador de presença|diretório de skills".
-# O marcador é o que denuncia que o cliente está instalado nesta máquina.
+# Destinos por cliente.
+# Formato: "rótulo|marcador de presença|diretório próprio|já lê o hub?"
+#
+#   marcador   o que denuncia que o cliente está instalado nesta máquina
+#   diretório  onde ele procura skills além do hub ("-" quando não há)
+#   lê o hub   1 = documenta ler ~/.agents/skills, então o symlink é dispensável
+#
+# Confirmado na documentação de cada um: Codex lê SÓ ~/.agents/skills (nunca
+# ~/.codex/skills); Gemini CLI e Cursor leem o hub e o diretório próprio, com o
+# hub tendo precedência. Para os demais o diretório próprio é a única referência
+# que temos, então o symlink fica como garantia.
 DESTINOS=(
-  "Claude Code|$HOME/.claude|$HOME/.claude/skills"
-  "Codex|$HOME/.codex|$HOME/.codex/skills"
-  "Gemini CLI|$HOME/.gemini|$HOME/.gemini/skills"
-  "Cursor|$HOME/.cursor|$HOME/.cursor/skills"
-  "OpenCode|$HOME/.config/opencode|$HOME/.config/opencode/skills"
-  "Factory|$HOME/.factory|$HOME/.factory/skills"
-  "Goose|$HOME/.config/goose|$HOME/.config/goose/skills"
-  "Amp|$HOME/.amp|$HOME/.amp/skills"
-  "Kiro|$HOME/.kiro|$HOME/.kiro/skills"
-  "Roo Code|$HOME/.roo|$HOME/.roo/skills"
-  "Trae|$HOME/.trae|$HOME/.trae/skills"
+  "Codex|$HOME/.codex|-|1"
+  "Gemini CLI|$HOME/.gemini|-|1"
+  "Cursor|$HOME/.cursor|-|1"
+  "Claude Code|$HOME/.claude|$HOME/.claude/skills|0"
+  "OpenCode|$HOME/.config/opencode|$HOME/.config/opencode/skills|0"
+  "Factory|$HOME/.factory|$HOME/.factory/skills|0"
+  "Goose|$HOME/.config/goose|$HOME/.config/goose/skills|0"
+  "Amp|$HOME/.amp|$HOME/.amp/skills|0"
+  "Kiro|$HOME/.kiro|$HOME/.kiro/skills|0"
+  "Roo Code|$HOME/.roo|$HOME/.roo/skills|0"
+  "Trae|$HOME/.trae|$HOME/.trae/skills|0"
+)
+
+# Diretórios que versões anteriores deste instalador criaram sem necessidade.
+# Continuam sendo limpos na desinstalação, para não deixar resíduo em quem
+# instalou antes desta correção.
+DESTINOS_OBSOLETOS=(
+  "$HOME/.codex/skills"
+  "$HOME/.gemini/skills"
+  "$HOME/.cursor/skills"
 )
 
 MODO_PROJETO=0
@@ -147,9 +165,15 @@ fi
 # ── Desinstalação ──────────────────────────────────────────────────────────
 if [ "$DESINSTALAR" = "1" ]; then
   printf '\n%sRemovendo o Xquads%s\n\n' "$NEGRITO" "$FIM"
+  # Inclui os diretórios que versões antigas criaram, para limpar resíduo.
+  DIRS_LIMPEZA=("${DESTINOS_OBSOLETOS[@]}")
+  for linha in "${DESTINOS[@]}"; do
+    IFS='|' read -r _ _ dir _ <<< "$linha"
+    [ "$dir" = "-" ] || DIRS_LIMPEZA+=("$dir")
+  done
+
   for squad in "${SQUADS[@]}"; do
-    for linha in "${DESTINOS[@]}"; do
-      IFS='|' read -r _ _ dir <<< "$linha"
+    for dir in "${DIRS_LIMPEZA[@]}"; do
       alvo="${dir:?}/${squad:?}"
       # Só remove o que aponta para o hub ou o próprio hub — nunca toca em
       # skills de terceiros que por acaso tenham o mesmo nome.
@@ -197,13 +221,21 @@ for squad in "${SQUADS[@]}"; do
   ok "$squad"
 done
 
-# Liga cada cliente detectado ao hub.
+# Liga ao hub cada cliente detectado que precise disso.
 printf '\n%sClientes%s\n' "$NEGRITO" "$FIM"
 detectados=0
 for linha in "${DESTINOS[@]}"; do
-  IFS='|' read -r rotulo marcador dir <<< "$linha"
+  IFS='|' read -r rotulo marcador dir le_hub <<< "$linha"
   [ -d "$marcador" ] || continue
   detectados=$((detectados + 1))
+
+  # Quem já lê ~/.agents/skills não precisa de nada: criar um diretório
+  # próprio só deixaria uma pasta que o cliente nunca abre.
+  if [ "$le_hub" = "1" ] || [ "$dir" = "-" ]; then
+    ok "$rotulo — lê o hub direto"
+    continue
+  fi
+
   mkdir -p "$dir"
   falhas=0
   for squad in "${SQUADS[@]}"; do

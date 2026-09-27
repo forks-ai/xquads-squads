@@ -155,6 +155,45 @@ O trabalho de julgamento se concentra em 6 arquivos do squad `xquads` e no `inst
   commit dcb32f3. Registrado como tarefa separada, nao corrigido aqui por estar
   fora do escopo declarado desta story.
 
+## QA Loop — iteração 1 (2026-09-27)
+
+**Gatilho:** verificação da documentação oficial de cada cliente, após a publicação.
+
+### Defeito
+
+O instalador criava `~/.codex/skills/` e ligava os squads ali. **O Codex nunca lê esse
+diretório.** A documentação da OpenAI lista apenas `.agents/skills` (projeto e repo),
+`$HOME/.agents/skills` (pessoal) e `/etc/codex/skills` (admin).
+
+Severidade: baixa. Não quebrava nada — o hub `~/.agents/skills` já era o caminho correto e
+o Codex encontrava as skills por lá. O efeito era uma pasta órfã que nenhum cliente abre e
+uma mensagem de sucesso enganosa ("✓ Codex" sugeria que o symlink era o que fazia funcionar).
+
+Mesma imprecisão, menor, em Gemini CLI e Cursor: ambos leem o hub **e** o diretório próprio,
+com o hub tendo precedência, então o symlink era redundante.
+
+### Correção
+
+- Tabela `DESTINOS` ganhou a coluna "já lê o hub". Quem lê não recebe diretório próprio;
+  a saída passa a dizer `Codex — lê o hub direto`, que é o que de fato acontece.
+- `DESTINOS_OBSOLETOS` mantém `~/.codex/skills`, `~/.gemini/skills` e `~/.cursor/skills` na
+  rotina de desinstalação, para limpar o resíduo de quem instalou a versão anterior.
+- README passou a explicar a diferença entre ler o hub e receber symlink, e documenta a
+  invocação no Codex (`/skills`, `$copy-squad`).
+
+### Testes
+
+Suíte foi de 33 para 40 asserções. As novas cobrem: ausência das pastas inúteis, presença
+das skills no hub, texto da saída, e limpeza do resíduo de versão antiga.
+
+Um falso negativo apareceu e foi corrigido no próprio teste: `grep -q` fecha o pipe no
+primeiro match e o SIGPIPE derrubava o `install.sh` sob `pipefail`. O teste agora captura a
+saída antes de filtrar. Mesmo padrão já tinha me enganado uma vez com `head`.
+
+### Verdict
+
+**PASS** — 40/40.
+
 ## QA Results
 
 **Gate:** PASS
@@ -224,3 +263,7 @@ autorização do dono para commit e push.
 | 2026-09-25 | @produto | Validação 10/10 — GO. Status Draft -> Ready |
 | 2026-09-25 | @desenvolvedor | Implementação concluída. 33 testes passando. Status Ready -> InReview |
 | 2026-09-25 | @qualidade | QA gate PASS (7/7, 3 issues low). Status InReview -> Done |
+| 2026-09-25 | @devops | Publicado em origin/main (b4610d0) com autorização do dono |
+| 2026-09-27 | @qualidade | QA loop it.1: destinos do instalador imprecisos (Codex não lê ~/.codex/skills) |
+| 2026-09-27 | @desenvolvedor | Correção aplicada. Suíte 33 -> 40 asserções |
+| 2026-09-27 | @qualidade | Re-review PASS (40/40) |

@@ -30,10 +30,20 @@ secao "Instalador"
 verificar "sintaxe valida"                 "bash -n install.sh"
 verificar "roda no bash 3.2 do macOS"      "HOME='$SANDBOX' /bin/bash install.sh"
 verificar "15 skills no hub"               "[ \$(ls '$SANDBOX/.agents/skills' | wc -l) -eq 15 ]"
-for cliente in ".claude" ".codex" ".gemini" ".cursor" ".config/opencode"; do
+# Clientes que precisam de symlink porque nao leem ~/.agents/skills.
+for cliente in ".claude" ".config/opencode"; do
   verificar "cliente $cliente ligado"      "[ -L '$SANDBOX/$cliente/skills/xquads' ]"
 done
+# Codex, Gemini e Cursor leem o hub: o instalador NAO deve criar diretorio
+# proprio para eles. Codex em especial nunca le ~/.codex/skills.
+for cliente in ".codex" ".gemini" ".cursor"; do
+  verificar "cliente $cliente sem pasta inutil" "[ ! -d '$SANDBOX/$cliente/skills' ]"
+done
+verificar "Codex acha as skills no hub"    "[ -f '$SANDBOX/.agents/skills/xquads/SKILL.md' ]"
+SAIDA_CODEX="$(HOME="$SANDBOX" /bin/bash install.sh xquads 2>&1)"
+verificar "saida anuncia o hub para o Codex" "printf '%s' \"\$SAIDA_CODEX\" | grep -q 'lê o hub direto'"
 verificar "symlink entrega o conteudo"     "grep -q '^name: xquads' '$SANDBOX/.claude/skills/xquads/SKILL.md'"
+verificar "hub entrega o conteudo"         "grep -q '^name: xquads' '$SANDBOX/.agents/skills/xquads/SKILL.md'"
 verificar "idempotente na 2a execucao"     "HOME='$SANDBOX' /bin/bash install.sh && [ \$(ls '$SANDBOX/.claude/skills' | wc -l) -eq 15 ]"
 verificar "instalacao seletiva"            "HOME='$SANDBOX' /bin/bash install.sh copy-squad brand-squad"
 verificar "rejeita squad inexistente"      "! HOME='$SANDBOX' /bin/bash install.sh nao-existe"
@@ -57,6 +67,12 @@ HOME="$SANDBOX" /bin/bash install.sh --uninstall >/dev/null 2>&1
 verificar "hub limpo"                      "[ \$(ls '$SANDBOX/.agents/skills' 2>/dev/null | wc -l) -eq 0 ]"
 verificar "skills dos clientes limpas"     "[ \$(ls '$SANDBOX/.claude/skills' 2>/dev/null | wc -l) -eq 0 ]"
 verificar "formato legado limpo"           "[ ! -d '$SANDBOX/.claude/commands/copy-squad' ]"
+# Quem instalou a versao antiga ficou com ~/.codex/skills; a limpeza deve pegar.
+mkdir -p "$SANDBOX/.codex/skills"
+ln -s "$SANDBOX/.agents/skills/xquads" "$SANDBOX/.codex/skills/xquads" 2>/dev/null
+HOME="$SANDBOX" /bin/bash install.sh >/dev/null 2>&1
+HOME="$SANDBOX" /bin/bash install.sh --uninstall >/dev/null 2>&1
+verificar "residuo de versao antiga limpo"  "[ ! -e '$SANDBOX/.codex/skills/xquads' ]"
 
 secao "Modo projeto"
 PROJETO="$(mktemp -d)"

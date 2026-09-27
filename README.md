@@ -32,8 +32,13 @@ bash install.sh --copy                     # copiar em vez de criar symlink
 bash install.sh --uninstall                # remover
 ```
 
-A instalação global usa `~/.agents/skills/` como fonte de verdade e liga os outros
-clientes por symlink — atualizar uma vez atualiza todos.
+A instalação global usa `~/.agents/skills/` como fonte de verdade — o diretório neutro que
+o padrão Agent Skills definiu. **Codex, Gemini CLI e Cursor leem esse diretório direto**, sem
+configuração nenhuma. Os clientes que só olham a própria pasta recebem um symlink apontando
+para lá. Nos dois casos, atualizar uma vez atualiza todos.
+
+No Codex, depois de instalar: `/skills` lista, `$copy-squad` invoca, ou é só descrever o
+problema que ele escolhe pela descrição.
 
 > **Sobre o custo de contexto.** Todo agente carrega o nome e a descrição de cada skill
 > instalada no início da sessão. Os 15 squads somam cerca de 2.400 tokens permanentes. Não é
