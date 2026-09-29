@@ -118,15 +118,34 @@ Se a confiança ficar abaixo de 50%, ele faz **uma** pergunta — nunca duas.
 
 ## Instalação
 
+Um comando, em qualquer agente compatível com [Agent Skills](https://agentskills.io) —
+Claude Code, Codex, Gemini CLI, Cursor, GitHub Copilot, VS Code, OpenCode e outros:
+
 ```bash
-git clone https://github.com/ohmyjahh/xquads-squads.git
-cp -r xquads-squads/xquads ~/.claude/commands/xquads
-cp xquads-squads/xquads/command-entry.md ~/.claude/commands/xquads.md
+bash <(curl -sL https://raw.githubusercontent.com/ohmyjahh/xquads-squads/main/install.sh)
 ```
 
-> ⚠️ **O nome da pasta define o slash command.** Mantenha `xquads` — renomear para `xquads-chief` faz o comando virar `/xquads-chief` e quebra as instruções desta doc.
+Depois é só pedir em linguagem natural ("usa o xquads pra montar a campanha") ou invocar a
+skill `xquads` pelo nome. No Codex, `/skills` lista e `$xquads` invoca.
 
-Depois é só rodar `/xquads`. O chefe geral só consegue ativar os squads que você tiver instalado em `~/.claude/commands/` — instale os outros squads antes para o roteamento funcionar por completo.
+O chefe geral só ativa os squads que estiverem instalados. Instalar tudo (o padrão do
+comando acima) deixa o roteamento completo; se você instalou só alguns, ele avisa quando uma
+rota não está disponível e oferece a alternativa mais próxima.
+
+> ⚠️ **Não renomeie a pasta.** O nome dela é o nome da skill — `xquads` precisa continuar
+> `xquads`.
+
+<details>
+<summary>Instalação legada por slash command do Claude Code</summary>
+
+Só para quem já usava o Xquads por `~/.claude/commands/` e quer manter esse caminho. Não é
+necessário: a instalação acima já cobre o Claude Code.
+
+```bash
+bash install.sh --claude-commands
+```
+
+</details>
 
 ## Componentes
 
@@ -138,5 +157,6 @@ Depois é só rodar `/xquads`. O chefe geral só consegue ativar os squads que v
 
 ## Requisitos
 
-- AIOS >= 4.0.0
-- Squads Xquads instalados em `~/.claude/commands/`
+- Um agente compatível com [Agent Skills](https://agentskills.io)
+- Git, para o instalador
+- Os squads que você quer que ele ative, instalados

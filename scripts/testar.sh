@@ -96,6 +96,18 @@ verificar "AGENTS.md presente"             "[ -f AGENTS.md ]"
 verificar "README sem instrucao de cp -r"  "! grep -q 'cp -r xquads-squads' README.md"
 verificar "README cita Codex"              "grep -q 'Codex' README.md"
 
+secao "Nenhum cliente apresentado como requisito"
+# Alunos de Codex relataram ver o Xquads como se fosse exclusivo do Claude Code.
+# A causa estava na documentacao voltada ao usuario, nao no codigo. Estas
+# verificacoes impedem a volta.
+verificar "xquads/README nao manda copiar p/ ~/.claude" "! grep -q 'cp -r.*\.claude/commands' xquads/README.md"
+verificar "xquads/README sem requisito de cliente"      "! sed -n '/^## Requisitos/,/^## /p' xquads/README.md | grep -q 'claude/commands'"
+verificar "xquads/README ensina o install.sh"           "grep -q 'install.sh' xquads/README.md"
+verificar "READMEs citam o padrao aberto"               "grep -ql 'agentskills.io' README.md xquads/README.md claude-code-mastery/README.md"
+# Slash command so pode aparecer dentro de um bloco marcado como legado.
+verificar "ativacao legada esta rotulada"               "[ \$(grep -c 'legad' claude-code-mastery/README.md) -ge 1 ]"
+verificar "nenhum README exige um cliente"              "! grep -rlE 'Claude Code \\(Anthropic|requer Claude|apenas para o Claude|somente no Claude' --include='README.md' ."
+
 secao "Regressao — Claude Code legado"
 verificar "command-entry.md preservado"    "[ -f xquads/command-entry.md ]"
 verificar "14 squads com legacy_command"   "[ \$(grep -c '^    legacy_command:' xquads/data/routing-catalog.yaml) -eq 14 ]"

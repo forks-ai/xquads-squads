@@ -40,25 +40,47 @@
 
 ## Quick Start
 
-### Activate the Orchestrator
-```
-@claude-code-mastery:claude-mastery-chief
-```
-Or use the AIOS activation:
+Este squad é uma [Agent Skill](https://agentskills.io): roda no Claude Code, Codex,
+Gemini CLI, Cursor, GitHub Copilot, VS Code, OpenCode e outros clientes compatíveis.
+
+### Ativar o orquestrador
+
+Peça em linguagem natural ("preciso configurar hooks no meu agente") ou invoque a skill
+`claude-code-mastery` pelo nome. O chefe do squad é carregado a partir de
+`agents/claude-mastery-chief.md`, relativo à raiz desta skill.
+
+### Acesso direto a um especialista
+
+O chefe roteia sozinho, mas você pode pedir um especialista pelo nome. Cada um é um
+arquivo em `agents/`:
+
+| Arquivo | Foco |
+|---|---|
+| `agents/hooks-architect.md` | Automação com hooks |
+| `agents/mcp-integrator.md` | Servidores MCP |
+| `agents/swarm-orchestrator.md` | Orquestração multi-agente |
+| `agents/config-engineer.md` | Settings e permissões |
+| `agents/skill-craftsman.md` | Skills e plugins |
+| `agents/project-integrator.md` | Integração com projetos |
+| `agents/roadmap-sentinel.md` | Atualizações e roadmap |
+
+<details>
+<summary>Ativação legada por slash command do Claude Code</summary>
+
+Vale apenas em instalações antigas feitas em `~/.claude/commands/`:
+
 ```
 /AIOS:agents:claude-mastery-chief
+/AIOS:agents:hooks-architect
+/AIOS:agents:mcp-integrator
+/AIOS:agents:swarm-orchestrator
+/AIOS:agents:config-engineer
+/AIOS:agents:skill-craftsman
+/AIOS:agents:project-integrator
+/AIOS:agents:roadmap-sentinel
 ```
 
-### Direct Specialist Access
-```
-/AIOS:agents:hooks-architect        # Hook automation
-/AIOS:agents:mcp-integrator         # MCP servers
-/AIOS:agents:swarm-orchestrator     # Multi-agent orchestration
-/AIOS:agents:config-engineer        # Settings & permissions
-/AIOS:agents:skill-craftsman        # Skills & plugins
-/AIOS:agents:project-integrator     # Project integration
-/AIOS:agents:roadmap-sentinel       # Updates & roadmap
-```
+</details>
 
 ## Feature Coverage
 
